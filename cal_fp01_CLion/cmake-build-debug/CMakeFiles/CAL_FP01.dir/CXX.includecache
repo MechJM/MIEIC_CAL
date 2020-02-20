@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/mechjm/Repositórios - Faculdade/2.º ano/2.º semestre/CAL/cal_fp01_CLion/Tests/Factorial.cpp
+Factorial.h
+/home/mechjm/Repositórios - Faculdade/2.º ano/2.º semestre/CAL/cal_fp01_CLion/Tests/Factorial.h
+
+/home/mechjm/Repositórios - Faculdade/2.º ano/2.º semestre/CAL/cal_fp01_CLion/Tests/Factorial.h
+
