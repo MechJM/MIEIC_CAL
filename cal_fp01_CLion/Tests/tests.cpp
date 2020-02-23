@@ -18,7 +18,6 @@ TEST(CAL_FP01, FactorialTest) {
 	EXPECT_EQ(3628800,factorialDinam(10));
 }
 
-/*
 TEST(CAL_FP01, CalcChangeTest) {
 	int numCoins = 3;
 	int coinValues[] = {1, 2, 5};
@@ -37,7 +36,6 @@ TEST(CAL_FP01, CalcChangeTest) {
 	int coinValues3[] = {1, 4, 5};
 	EXPECT_EQ("4;4;",calcChange(8, numCoins3, coinValues3));
 }
-*/
 /*
 TEST(CAL_FP01, CalcSumArrayTest) {
 	int sequence[5] = {4,7,2,8,1};
