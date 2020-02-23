@@ -3,7 +3,6 @@
  */
 
 #include "Change.h"
-#include <algorithm>
 
 string calcChange(int m, int numCoins, int *coinValues)
 {
