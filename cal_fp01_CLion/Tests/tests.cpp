@@ -36,7 +36,7 @@ TEST(CAL_FP01, CalcChangeTest) {
 	int coinValues3[] = {1, 4, 5};
 	EXPECT_EQ("4;4;",calcChange(8, numCoins3, coinValues3));
 }
-/*
+
 TEST(CAL_FP01, CalcSumArrayTest) {
 	int sequence[5] = {4,7,2,8,1};
 	int sequence2[9] = {6,1,10,3,2,6,7,2,4};
@@ -44,7 +44,7 @@ TEST(CAL_FP01, CalcSumArrayTest) {
 	EXPECT_EQ("1,4;9,1;11,2;18,1;22,0;",calcSum(sequence, 5));
 	EXPECT_EQ("1,1;5,3;11,3;16,1;20,3;24,3;31,1;35,1;41,0;",calcSum(sequence2, 9));
 }
-*/
+
 /*
 TEST(CAL_FP01, PartitioningTest) {
 	EXPECT_EQ(3025,s_recursive(9,3));
