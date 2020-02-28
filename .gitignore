@@ -1,0 +1,6 @@
+# Ignore everything
+**/cmake-build-debug
+**/CMakeLists.txt
+**/lib
+**/main.cpp
+.idea
