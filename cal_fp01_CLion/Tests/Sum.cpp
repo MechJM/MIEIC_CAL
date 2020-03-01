@@ -3,16 +3,15 @@
  */
 
 #include "Sum.h"
-#include <chrono>
 #include <vector>
-#include <iostream>
+
+
+
 
 using namespace std;
 
 string calcSum(int* sequence, int size)
 {
-    auto start=std::chrono::high_resolution_clock::now();
-
     vector<int> minSum, index;
     string result = "";
     int sum = 0, count = 0;
@@ -38,12 +37,6 @@ string calcSum(int* sequence, int size)
     for (int k = 0; k < minSum.size() ; k++) {
         result += to_string(minSum.at(k)) + "," + to_string(index.at(k)) + ";";
     }
-
-    auto finish=std::chrono::high_resolution_clock::now();
-
-    auto mili=chrono::duration_cast<chrono::milliseconds>(finish-start).count();
-
-    cout<<"Time in milliseconds: "<<mili<<endl;
 
     return result;
 
