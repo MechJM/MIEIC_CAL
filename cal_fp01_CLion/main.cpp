@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     std::cout << "CAL Lab Class 01" << std::endl;
 
 
-
+    /*
     //Statistics for calcSum
     srand(time(NULL));
 
@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     csv.close();
 
     //End of statistics
+    */
 
     return RUN_ALL_TESTS();;
 }
