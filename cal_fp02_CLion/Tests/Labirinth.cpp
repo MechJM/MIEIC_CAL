@@ -41,7 +41,35 @@ void  Labirinth::printLabirinth()
 
 bool Labirinth::findGoal(int x, int y)
 {
-	return false;
+    if (visited[y][x]) return false;
+    else visited[y][x] = true;
+
+    if (labirinth[y][x] == 0) return false;
+
+	if (labirinth[y][x] == 2)
+	{
+	    cout<<"Reached the end!\n";
+	    return true;
+	}
+
+	//UP
+	if (findGoal(x,y-1)) return true;
+	else
+    {
+	    //RIGHT
+	    if (findGoal(x+1,y)) return true;
+        else
+	    {
+	        //DOWN
+	        if (findGoal(x,y+1)) return true;
+            else
+	        {
+	            //LEFT
+	            return findGoal(x-1,y);
+            }
+        }
+    }
+
 }
 
 
