@@ -69,4 +69,3 @@ string calcChange(int m, int numCoins, int *coinValues)
     return result;
 }
 
-
