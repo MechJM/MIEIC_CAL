@@ -4,6 +4,9 @@
  */
 
 #include "Sudoku.h"
+#include <algorithm>
+
+using namespace std;
 
 /** Inicia um Sudoku vazio.
  */
@@ -13,9 +16,9 @@ Sudoku::Sudoku()
 }
 
 /**
- * Inicia um Sudoku com um conteúdo inicial.
- * Lança excepção IllegalArgumentException se os valores
- * estiverem fora da gama de 1 a 9 ou se existirem números repetidos
+ * Inicia um Sudoku com um conteï¿½do inicial.
+ * Lanï¿½a excepï¿½ï¿½o IllegalArgumentException se os valores
+ * estiverem fora da gama de 1 a 9 ou se existirem nï¿½meros repetidos
  * por linha, coluna ou bloc 3x3.
  *
  * @param nums matriz com os valores iniciais (0 significa por preencher)
@@ -61,7 +64,7 @@ void Sudoku::initialize()
 }
 
 /**
- * Obtem o conteúdo actual (só para leitura!).
+ * Obtem o conteudo actual (so para leitura!).
  */
 int** Sudoku::getNumbers()
 {
@@ -79,7 +82,7 @@ int** Sudoku::getNumbers()
 }
 
 /**
- * Verifica se o Sudoku já está completamente resolvido
+ * Verifica se o Sudoku jï¿½ estï¿½ completamente resolvido
  */
 bool Sudoku::isComplete()
 {
@@ -90,10 +93,15 @@ bool Sudoku::isComplete()
 
 /**
  * Resolve o Sudoku.
- * Retorna indicação de sucesso ou insucesso (sudoku impossível).
+ * Retorna indicaï¿½ï¿½o de sucesso ou insucesso (sudoku impossï¿½vel).
  */
 bool Sudoku::solve()
 {
+    if (isComplete()) return true;
+
+    vector<int> nums = {1,2,3,4,5,6,7,8,9};
+
+
 	return false;
 }
 
@@ -111,4 +119,54 @@ void Sudoku::print()
 
 		cout << endl;
 	}
+}
+
+//My functions
+
+vector<int> Sudoku::checkRow(int y,vector<int> nums)
+{
+    for (int i=0;i<9;i++)
+    {
+        if (find(nums.begin(),nums.end(),numbers[y][i]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[y][i]));
+    }
+    return nums;
+}
+
+vector<int> Sudoku::checkCol(int x,vector<int> nums)
+{
+    for (int i=0;i<9;i++)
+    {
+        if (find(nums.begin(),nums.end(),numbers[i][x]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[i][x]));
+    }
+    return nums;
+}
+
+vector<int> Sudoku::checkBox(int x,int y,vector<int> nums)
+{
+    int boxX = (int) x/3;
+    int boxY = (int) y/3;
+
+    for (int i = (boxY*3);i<((boxY+1)*3);i++)
+    {
+        for (int i2 = (boxX*3);i2<((boxX+1)*3);i2++)
+        {
+            if (find(nums.begin(),nums.end(),numbers[i][i2]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[i][i2]));
+        }
+    }
+}
+
+void Sudoku::calcCands()
+{
+    for (int i=0;i<9;i++)
+    {
+        for (int i2=0;i2<9;i2++)
+        {
+            vector<int> nums = {1,2,3,4,5,6,7,8,9};
+            nums = checkCol(i,nums);
+            nums = checkRow(i2,nums);
+            nums = checkBox(i,i2,nums);
+            candNum[i2][i] = nums.size();
+            cands[i2][i] = nums;
+        }
+    }
 }
