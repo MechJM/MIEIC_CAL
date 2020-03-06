@@ -5,9 +5,6 @@
 #include "Sum.h"
 #include <vector>
 
-
-
-
 using namespace std;
 
 string calcSum(int* sequence, int size)

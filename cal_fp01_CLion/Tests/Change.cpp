@@ -1,6 +1,6 @@
 /*
-* Change.cpp
-*/
+ * Change.cpp
+ */
 
 #include "Change.h"
 
@@ -42,10 +42,10 @@ string calcChange(int m, int numCoins, int *coinValues)
                 lastCoin[i][k] = mod_coinValues[i];
             }
             else
-            {
-                minCoins[i][k]=minCoins[i-1][k];
-                lastCoin[i][k]=lastCoin[i-1][k];
-            }
+                {
+                    minCoins[i][k]=minCoins[i-1][k];
+                    lastCoin[i][k]=lastCoin[i-1][k];
+                }
         }
     }
 
