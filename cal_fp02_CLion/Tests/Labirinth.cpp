@@ -14,6 +14,7 @@ Labirinth::Labirinth(int values[10][10])
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++)
 			labirinth[i][j] = values[i][j];
+    initializeVisited();
 }
 
 
@@ -41,6 +42,7 @@ void  Labirinth::printLabirinth()
 
 bool Labirinth::findGoal(int x, int y)
 {
+
     if (visited[y][x]) return false;
     else visited[y][x] = true;
 
