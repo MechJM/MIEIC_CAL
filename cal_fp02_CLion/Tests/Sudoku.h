@@ -82,7 +82,13 @@ public:
 	vector<int> checkBox(int x,int y,vector<int> nums);
 	int candNum[9][9];
 	vector<int> cands[9][9];
-	void calcCands();
+	int calcCands();
+	void placeNum(int x,int y,int num);
+	void removeNum(int x,int y,int num);
+	bool checkRowMistake(int y);
+	bool checkColMistake(int x);
+	bool checkBoxMistake(int x,int y);
+	bool checkMistakes();
 };
 
 

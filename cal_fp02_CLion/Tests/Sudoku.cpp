@@ -155,8 +155,9 @@ vector<int> Sudoku::checkBox(int x,int y,vector<int> nums)
     }
 }
 
-void Sudoku::calcCands()
+int Sudoku::calcCands()
 {
+    int min=90;
     for (int i=0;i<9;i++)
     {
         for (int i2=0;i2<9;i2++)
@@ -165,8 +166,84 @@ void Sudoku::calcCands()
             nums = checkCol(i,nums);
             nums = checkRow(i2,nums);
             nums = checkBox(i,i2,nums);
+            if (nums.size() < min) min = nums.size();
             candNum[i2][i] = nums.size();
             cands[i2][i] = nums;
         }
     }
+    return min;
+}
+
+void Sudoku::placeNum(int x,int y,int num)
+{
+    numbers[y][x] = num;
+    countFilled++;
+}
+
+void Sudoku::removeNum(int x,int y,int num)
+{
+    numbers[y][x] = 0;
+    countFilled--;
+}
+
+bool Sudoku::checkRowMistake(int y)
+{
+    vector<int> freqs = {0,0,0,0,0,0,0,0,0};
+
+    for (int i=0;i<9;i++)
+    {
+        switch (numbers[y][i])
+        {
+            case 1: {freqs.at(0)++; break;}
+            case 2: {freqs.at(1)++; break;}
+            case 3: {freqs.at(2)++; break;}
+            case 4: {freqs.at(3)++; break;}
+            case 5: {freqs.at(4)++; break;}
+            case 6: {freqs.at(5)++; break;}
+            case 7: {freqs.at(6)++; break;}
+            case 8: {freqs.at(7)++; break;}
+            case 9: {freqs.at(8)++; break;}
+            default: break;
+        }
+    }
+
+    for (int i: freqs) if (i > 1) return false;
+
+    return true;
+}
+
+bool Sudoku::checkColMistake(int x)
+{
+    vector<int> freqs = {0,0,0,0,0,0,0,0,0};
+
+    for (int i=0;i<9;i++)
+    {
+        switch (numbers[i][x])
+        {
+            case 1: {freqs.at(0)++; break;}
+            case 2: {freqs.at(1)++; break;}
+            case 3: {freqs.at(2)++; break;}
+            case 4: {freqs.at(3)++; break;}
+            case 5: {freqs.at(4)++; break;}
+            case 6: {freqs.at(5)++; break;}
+            case 7: {freqs.at(6)++; break;}
+            case 8: {freqs.at(7)++; break;}
+            case 9: {freqs.at(8)++; break;}
+            default: break;
+        }
+    }
+
+    for (int i: freqs) if (i > 1) return false;
+
+    return true;
+}
+
+bool Sudoku::checkBoxMistake(int x,int y)
+{
+
+}
+
+bool Sudoku::checkMistakes()
+{
+
 }
