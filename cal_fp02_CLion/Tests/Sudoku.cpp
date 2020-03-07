@@ -102,20 +102,26 @@ bool Sudoku::solve()
     if (!checkMistakes()) return false;
 
     int min = calcCands();
+    /*
+    cout<<"Nums: \n";
+    print();
+    cout<<endl;
 
-    cout<<"Min: "<<min<<endl;
-
+    cout<<"Cands: \n";
+    printCands();
+    cout<<endl;
+    */
     for (int i = 0; i < 9; ++i) {
         for (int i2 = 0; i2 < 9; ++i2) {
             int count = -1;
-            if (candNum[i2][i] == min && numbers[i2][i] == 0)
+            if (cands[i][i2].size() == min && numbers[i][i2] == 0)
             {
                 do
                 {
-                    if (count == (candNum[i2][i] - 1)) break;
-                    placeNum(i2,i,cands[i2][i].at(++count));
+                    if (count == (cands[i][i2].size() - 1)) break;
+                    placeNum(i2,i,cands[i][i2].at(++count));
                     if (solve()) return true;
-                    else removeNum(i2,i,cands[i2][i].at(count));
+                    else removeNum(i2,i,cands[i][i2].at(count));
                 }
                 while (!checkMistakes());
             }
@@ -131,7 +137,7 @@ void Sudoku::printCands()
     for (int i = 0; i < 9; i++)
     {
         for (int a = 0; a < 9; a++)
-            cout << this->candNum[i][a] << " ";
+            cout << this->cands[i][a].size() << " ";
 
         cout << endl;
     }
@@ -182,7 +188,7 @@ vector<int> Sudoku::checkBox(int x,int y,vector<int> nums)
     {
         for (int i2 = (boxX*3);i2<((boxX+1)*3);i2++)
         {
-            if (find(nums.begin(),nums.end(),numbers[i2][i]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[i2][i]));
+            if (find(nums.begin(),nums.end(),numbers[i][i2]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[i][i2]));
         }
     }
     return nums;
@@ -195,24 +201,18 @@ int Sudoku::calcCands()
     {
         for (int i2=0;i2<9;i2++)
         {
-            cout<<"x: "<<i<<endl<<"y: "<<i2<<endl<<endl;
-            if (numbers[i2][i] != 0)
+            if (numbers[i][i2] != 0)
             {
-                candNum[i2][i] = 0;
                 vector<int> vect;
                 vect.clear();
-                cands[i2][i] = vect;
+                cands[i][i2] = vect;
             } else
             {vector<int> nums = {1,2,3,4,5,6,7,8,9};
-            nums = checkCol(i,nums);
-            cout<<nums.size()<<endl;
-            nums = checkRow(i2,nums);
-            cout<<nums.size()<<endl;
-            nums = checkBox(i,i2,nums);
-            cout<<nums.size()<<endl<<endl;
+            nums = checkCol(i2,nums);
+            nums = checkRow(i,nums);
+            nums = checkBox(i2,i,nums);
             if (nums.size() < min && nums.size() > 0) min = nums.size();
-            candNum[i2][i] = nums.size();
-            cands[i2][i] = nums;}
+            cands[i][i2] = nums;}
         }
     }
     return min;
@@ -289,9 +289,9 @@ bool Sudoku::checkBoxMistake(int x,int y)
 
     vector<int> freqs = {0,0,0,0,0,0,0,0,0};
 
-    for (int i = (boxX*3); i < ((boxX+1)*3); ++i) {
-        for (int i2 = (boxY*3); i2 < ((boxY+1)*3); ++i2) {
-            switch (numbers[i2][i])
+    for (int i = (boxY*3); i < ((boxY+1)*3); ++i) {
+        for (int i2 = (boxX*3); i2 < ((boxX+1)*3); ++i2) {
+            switch (numbers[i][i2])
             {
                 case 1: {freqs.at(0)++; break;}
                 case 2: {freqs.at(1)++; break;}

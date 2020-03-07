@@ -80,7 +80,6 @@ public:
 	vector<int> checkRow(int y,vector<int> nums);
 	vector<int> checkCol(int x,vector<int> nums);
 	vector<int> checkBox(int x,int y,vector<int> nums);
-	int candNum[9][9];
 	vector<int> cands[9][9];
 	int calcCands();
 	void placeNum(int x,int y,int num);
