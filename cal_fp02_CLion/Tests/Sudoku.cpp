@@ -103,7 +103,7 @@ bool Sudoku::solve()
 
     calcRes res = calcCands();
 
-    /*
+
     cout<<"Nums: \n";
     print();
     cout<<endl;
@@ -111,10 +111,10 @@ bool Sudoku::solve()
     cout<<"Cands: \n";
     printCands(res);
     cout<<endl;
-    */
 
-    for (int i = 0; i < 9; ++i) {
-        for (int i2 = 0; i2 < 9; ++i2) {
+
+    for (int i = 0; i < 9; i++) {
+        for (int i2 = 0; i2 < 9; i2++) {
             int count = -1;
             if (res.cands[i][i2].size() == res.min && numbers[i][i2] == 0)
             {
@@ -122,12 +122,8 @@ bool Sudoku::solve()
                 {
                     if (count == (res.cands[i][i2].size() - 1)) break;
                     placeNum(i2,i,res.cands[i][i2].at(++count));
-                    if (!checkMistakes())
-                    {
-                        removeNum(i2,i);
-                        continue;
-                    }
-                    if (solve()) return true;
+                    if (!solve()) removeNum(i2,i);
+                    else return true;
                 }
             }
         }
@@ -299,8 +295,8 @@ bool Sudoku::checkBoxMistake(int x,int y)
 
     vector<int> freqs = {0,0,0,0,0,0,0,0,0};
 
-    for (int i = (boxY*3); i < ((boxY+1)*3); ++i) {
-        for (int i2 = (boxX*3); i2 < ((boxX+1)*3); ++i2) {
+    for (int i = (boxY*3); i < ((boxY+1)*3); i++) {
+        for (int i2 = (boxX*3); i2 < ((boxX+1)*3); i2++) {
             switch (numbers[i][i2])
             {
                 case 1: {freqs.at(0)++; break;}
@@ -324,8 +320,8 @@ bool Sudoku::checkBoxMistake(int x,int y)
 
 bool Sudoku::checkMistakes()
 {
-    for (int i = 0; i < 9; ++i) {
-        for (int i2 = 0; i2 < 9; ++i2) {
+    for (int i = 0; i < 9; i++) {
+        for (int i2 = 0; i2 < 9; i2++) {
             if (!(checkColMistake(i2) && checkRowMistake(i) && checkBoxMistake(i2,i))) return false;
         }
     }
