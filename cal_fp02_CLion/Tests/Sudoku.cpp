@@ -101,29 +101,34 @@ bool Sudoku::solve()
 
     if (!checkMistakes()) return false;
 
-    int min = calcCands();
+    calcRes res = calcCands();
+
     /*
     cout<<"Nums: \n";
     print();
     cout<<endl;
 
     cout<<"Cands: \n";
-    printCands();
+    printCands(res);
     cout<<endl;
     */
+
     for (int i = 0; i < 9; ++i) {
         for (int i2 = 0; i2 < 9; ++i2) {
             int count = -1;
-            if (cands[i][i2].size() == min && numbers[i][i2] == 0)
+            if (res.cands[i][i2].size() == res.min && numbers[i][i2] == 0)
             {
-                do
+                while (true)
                 {
-                    if (count == (cands[i][i2].size() - 1)) break;
-                    placeNum(i2,i,cands[i][i2].at(++count));
+                    if (count == (res.cands[i][i2].size() - 1)) break;
+                    placeNum(i2,i,res.cands[i][i2].at(++count));
+                    if (!checkMistakes())
+                    {
+                        removeNum(i2,i);
+                        continue;
+                    }
                     if (solve()) return true;
-                    else removeNum(i2,i,cands[i][i2].at(count));
                 }
-                while (!checkMistakes());
             }
         }
     }
@@ -132,12 +137,12 @@ bool Sudoku::solve()
 	return false;
 }
 
-void Sudoku::printCands()
+void Sudoku::printCands(calcRes cands)
 {
     for (int i = 0; i < 9; i++)
     {
         for (int a = 0; a < 9; a++)
-            cout << this->cands[i][a].size() << " ";
+            cout << cands.cands[i][a].size() << " ";
 
         cout << endl;
     }
@@ -194,9 +199,11 @@ vector<int> Sudoku::checkBox(int x,int y,vector<int> nums)
     return nums;
 }
 
-int Sudoku::calcCands()
+Sudoku::calcRes Sudoku::calcCands()
 {
+    calcRes result;
     int min=90;
+
     for (int i=0;i<9;i++)
     {
         for (int i2=0;i2<9;i2++)
@@ -205,17 +212,20 @@ int Sudoku::calcCands()
             {
                 vector<int> vect;
                 vect.clear();
-                cands[i][i2] = vect;
+                result.cands[i][i2] = vect;
             } else
             {vector<int> nums = {1,2,3,4,5,6,7,8,9};
             nums = checkCol(i2,nums);
             nums = checkRow(i,nums);
             nums = checkBox(i2,i,nums);
             if (nums.size() < min && nums.size() > 0) min = nums.size();
-            cands[i][i2] = nums;}
+            result.cands[i][i2] = nums;}
         }
     }
-    return min;
+
+    result.min = min;
+
+    return result;
 }
 
 void Sudoku::placeNum(int x,int y,int num)
@@ -224,7 +234,7 @@ void Sudoku::placeNum(int x,int y,int num)
     countFilled++;
 }
 
-void Sudoku::removeNum(int x,int y,int num)
+void Sudoku::removeNum(int x,int y)
 {
     numbers[y][x] = 0;
     countFilled--;

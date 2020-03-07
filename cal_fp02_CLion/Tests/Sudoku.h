@@ -77,18 +77,23 @@ public:
 
     //My things
 
+    typedef struct calcRes
+    {
+        int min;
+        vector<int> cands[9][9];
+    } calcRes;
+
 	vector<int> checkRow(int y,vector<int> nums);
 	vector<int> checkCol(int x,vector<int> nums);
 	vector<int> checkBox(int x,int y,vector<int> nums);
-	vector<int> cands[9][9];
-	int calcCands();
+	calcRes calcCands();
 	void placeNum(int x,int y,int num);
-	void removeNum(int x,int y,int num);
+	void removeNum(int x,int y);
 	bool checkRowMistake(int y);
 	bool checkColMistake(int x);
 	bool checkBoxMistake(int x,int y);
 	bool checkMistakes();
-    void printCands();
+    void printCands(calcRes cands);
 };
 
 
