@@ -97,12 +97,44 @@ bool Sudoku::isComplete()
  */
 bool Sudoku::solve()
 {
-    if (isComplete()) return true;
+    if (isComplete() && checkMistakes()) return true;
 
-    vector<int> nums = {1,2,3,4,5,6,7,8,9};
+    if (!checkMistakes()) return false;
+
+    int min = calcCands();
+
+    cout<<"Min: "<<min<<endl;
+
+    for (int i = 0; i < 9; ++i) {
+        for (int i2 = 0; i2 < 9; ++i2) {
+            int count = -1;
+            if (candNum[i2][i] == min && numbers[i2][i] == 0)
+            {
+                do
+                {
+                    if (count == (candNum[i2][i] - 1)) break;
+                    placeNum(i2,i,cands[i2][i].at(++count));
+                    if (solve()) return true;
+                    else removeNum(i2,i,cands[i2][i].at(count));
+                }
+                while (!checkMistakes());
+            }
+        }
+    }
 
 
 	return false;
+}
+
+void Sudoku::printCands()
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int a = 0; a < 9; a++)
+            cout << this->candNum[i][a] << " ";
+
+        cout << endl;
+    }
 }
 
 
@@ -150,9 +182,10 @@ vector<int> Sudoku::checkBox(int x,int y,vector<int> nums)
     {
         for (int i2 = (boxX*3);i2<((boxX+1)*3);i2++)
         {
-            if (find(nums.begin(),nums.end(),numbers[i][i2]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[i][i2]));
+            if (find(nums.begin(),nums.end(),numbers[i2][i]) != nums.end()) nums.erase(find(nums.begin(),nums.end(),numbers[i2][i]));
         }
     }
+    return nums;
 }
 
 int Sudoku::calcCands()
@@ -162,13 +195,24 @@ int Sudoku::calcCands()
     {
         for (int i2=0;i2<9;i2++)
         {
-            vector<int> nums = {1,2,3,4,5,6,7,8,9};
+            cout<<"x: "<<i<<endl<<"y: "<<i2<<endl<<endl;
+            if (numbers[i2][i] != 0)
+            {
+                candNum[i2][i] = 0;
+                vector<int> vect;
+                vect.clear();
+                cands[i2][i] = vect;
+            } else
+            {vector<int> nums = {1,2,3,4,5,6,7,8,9};
             nums = checkCol(i,nums);
+            cout<<nums.size()<<endl;
             nums = checkRow(i2,nums);
+            cout<<nums.size()<<endl;
             nums = checkBox(i,i2,nums);
-            if (nums.size() < min) min = nums.size();
+            cout<<nums.size()<<endl<<endl;
+            if (nums.size() < min && nums.size() > 0) min = nums.size();
             candNum[i2][i] = nums.size();
-            cands[i2][i] = nums;
+            cands[i2][i] = nums;}
         }
     }
     return min;

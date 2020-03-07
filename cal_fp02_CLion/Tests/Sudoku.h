@@ -89,6 +89,7 @@ public:
 	bool checkColMistake(int x);
 	bool checkBoxMistake(int x,int y);
 	bool checkMistakes();
+    void printCands();
 };
 
 
