@@ -240,10 +240,40 @@ bool Sudoku::checkColMistake(int x)
 
 bool Sudoku::checkBoxMistake(int x,int y)
 {
+    int boxX = (int) x/3;
+    int boxY = (int) y/3;
 
+    vector<int> freqs = {0,0,0,0,0,0,0,0,0};
+
+    for (int i = (boxX*3); i < ((boxX+1)*3); ++i) {
+        for (int i2 = (boxY*3); i2 < ((boxY+1)*3); ++i2) {
+            switch (numbers[i2][i])
+            {
+                case 1: {freqs.at(0)++; break;}
+                case 2: {freqs.at(1)++; break;}
+                case 3: {freqs.at(2)++; break;}
+                case 4: {freqs.at(3)++; break;}
+                case 5: {freqs.at(4)++; break;}
+                case 6: {freqs.at(5)++; break;}
+                case 7: {freqs.at(6)++; break;}
+                case 8: {freqs.at(7)++; break;}
+                case 9: {freqs.at(8)++; break;}
+                default: break;
+            }
+        }
+    }
+
+    for (int i: freqs) if (i > 1) return false;
+
+    return true;
 }
 
 bool Sudoku::checkMistakes()
 {
-
+    for (int i = 0; i < 9; ++i) {
+        for (int i2 = 0; i2 < 9; ++i2) {
+            if (!(checkColMistake(i2) && checkRowMistake(i) && checkBoxMistake(i2,i))) return false;
+        }
+    }
+    return true;
 }
