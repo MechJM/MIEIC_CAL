@@ -102,7 +102,7 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 	// Divide in halves (left and right) and solve them recursively,
 	// possibly in parallel (in case numThreads > 1)
 	Result leftRes = np_DC(vp,left,(left-right)/2,numThreads);
-	Result rightRes = np_DC(vp,(left-right)/2,right,numThreads);
+	Result rightRes = np_DC(vp,(left-right)/2+1,right,numThreads);
 
 	// Select the best solution from left and right
 	Result best;
