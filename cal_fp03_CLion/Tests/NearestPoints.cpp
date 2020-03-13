@@ -82,6 +82,11 @@ static void npByY(vector<Point> &vp, int left, int right, Result &res)
 	// TODO
 }
 
+bool sortPointY(const Point &left,const Point &right)
+{
+    return left.y < right.y;
+}
+
 /**
  * Recursive divide and conquer algorithm.
  * Finds the nearest points in "vp" between indices left and right (inclusive),
@@ -89,26 +94,47 @@ static void npByY(vector<Point> &vp, int left, int right, Result &res)
  */
 static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 	// Base case of two points
-	// TODO
+	if ((right - left) == 1) return Result(vp.at(left).distance(vp.at(right)),vp.at(left),vp.at(right));
 
 	// Base case of a single point: no solution, so distance is MAX_DOUBLE
-	// TODO
+	if (right == left) return Result(MAX_DOUBLE,vp.at(left),Point(MAX_DOUBLE,MAX_DOUBLE));
 
 	// Divide in halves (left and right) and solve them recursively,
 	// possibly in parallel (in case numThreads > 1)
-	// TODO
+	Result leftRes = np_DC(vp,left,(left-right)/2,numThreads);
+	Result rightRes = np_DC(vp,(left-right)/2,right,numThreads);
 
 	// Select the best solution from left and right
-	// TODO
+	Result best;
+	if (leftRes.dmin < rightRes.dmin) best = leftRes;
+	else best = rightRes;
 
 	// Determine the strip area around middle point
-	// TODO
+	double middle = (vp.at(right).x-vp.at(left).x)/2;
+	bool foundLeft = false,foundRight = false;
+	vector<Point>::iterator leftEdge, rightEdge;
+	for (auto i = vp.begin(); i != vp.end(); i++)
+    {
+	    if (i->x >= (middle - best.dmin) && !foundLeft)
+        {
+	        foundLeft = true;
+	        leftEdge = i;
+	        left = i - vp.begin();
+        }
+	    if (i->x > (middle + best.dmin) && !foundRight)
+        {
+	        foundRight = true;
+	        rightEdge =  (i-1);
+	        right = i - vp.begin();
+	        break;
+        }
+    }
 
 	// Order points in strip area by Y coordinate
-	// TODO
+	sort(leftEdge,rightEdge,sortPointY);
 
 	// Calculate nearest points in strip area (using npByY function)
-	// TODO
+	npByY(vp,left,right,best);
 
 	// Reorder points in strip area back by X coordinate
 	//TODO
