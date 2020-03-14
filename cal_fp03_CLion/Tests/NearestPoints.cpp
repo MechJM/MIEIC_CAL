@@ -111,14 +111,6 @@ bool sortPointY(const Point &left,const Point &right)
  * using at most numThreads.
  */
 static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
-    if (left == 48 && right == 63)
-    {
-        cout<<"";
-        //Brute force; Pontos64; 0; 556.0656436069396; (57772,2763); (58292,2566)
-        //Middle: 56123
-        //Best.dmin: 2244?
-    }
-
     // Base case of two points
 	if ((right - left) == 1) return Result(vp.at(left).distance(vp.at(right)),vp.at(left),vp.at(right));
 
@@ -127,8 +119,18 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 
 	// Divide in halves (left and right) and solve them recursively,
 	// possibly in parallel (in case numThreads > 1)
-	Result leftRes = np_DC(vp,left,(right+left)/2,numThreads);
-	Result rightRes = np_DC(vp,(right+left)/2+1,right,numThreads);
+	if (numThreads > 1)
+    {
+	    std::thread t([=](){np_DC(vp,left,(right + left) / 2,numThreads);});
+        Result rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
+        t.join();
+
+    }
+	else
+    {
+        Result leftRes = np_DC(vp, left, (right + left) / 2, numThreads);
+        Result rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
+    }
 
 	// Select the best solution from left and right
 	Result best;
