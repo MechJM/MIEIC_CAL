@@ -94,6 +94,12 @@ static void npByY(vector<Point> &vp, int left, int right, Result &res)
     }
 }
 
+bool sortPointX(const Point &left,const Point &right)
+{
+    return left.x < right.x;
+}
+
+
 bool sortPointY(const Point &left,const Point &right)
 {
     return left.y < right.y;
@@ -105,7 +111,15 @@ bool sortPointY(const Point &left,const Point &right)
  * using at most numThreads.
  */
 static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
-	// Base case of two points
+    if (left == 48 && right == 63)
+    {
+        cout<<"";
+        //Brute force; Pontos64; 0; 556.0656436069396; (57772,2763); (58292,2566)
+        //Middle: 56123
+        //Best.dmin: 2244?
+    }
+
+    // Base case of two points
 	if ((right - left) == 1) return Result(vp.at(left).distance(vp.at(right)),vp.at(left),vp.at(right));
 
 	// Base case of a single point: no solution, so distance is MAX_DOUBLE
@@ -113,8 +127,8 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 
 	// Divide in halves (left and right) and solve them recursively,
 	// possibly in parallel (in case numThreads > 1)
-	Result leftRes = np_DC(vp,left,(left-right)/2,numThreads);
-	Result rightRes = np_DC(vp,(left-right)/2+1,right,numThreads);
+	Result leftRes = np_DC(vp,left,(right+left)/2,numThreads);
+	Result rightRes = np_DC(vp,(right+left)/2+1,right,numThreads);
 
 	// Select the best solution from left and right
 	Result best;
@@ -122,36 +136,42 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 	else best = rightRes;
 
 	// Determine the strip area around middle point
-	double middle = (vp.at(right).x-vp.at(left).x)/2;
-	bool foundLeft = false,foundRight = false;
+	double middle = (vp.at(right).x+vp.at(left).x)/2;
+	bool foundLeft = false,foundRight = false,pointInStrip = false;
 	vector<Point>::iterator leftEdge, rightEdge;
-	for (auto i = vp.begin(); i != vp.end(); i++)
+
+	if (vp.at(left).x >= (middle - best.dmin)) {leftEdge = vp.begin() + left; foundLeft = true; pointInStrip = true;}
+	if (vp.at(right).x <= (middle + best.dmin)) {rightEdge = vp.begin() + right; foundRight = true; pointInStrip = true;}
+
+	if (!foundLeft || !foundRight)
     {
-	    if (i->x >= (middle - best.dmin) && !foundLeft)
-        {
-	        foundLeft = true;
-	        leftEdge = i;
-	        left = i - vp.begin();
-        }
-	    if (i->x > (middle + best.dmin) && !foundRight)
-        {
-	        foundRight = true;
-	        rightEdge =  (i-1);
-	        right = i - vp.begin();
-	        break;
+	    for (auto i = vp.begin() + left; i != vp.begin() + right + 1; i++)
+	    {
+            if (i->x >= (middle - best.dmin) && i->x <= (middle + best.dmin) && !foundLeft) {
+                pointInStrip = true;
+                foundLeft = true;
+                leftEdge = i;
+                left = i - vp.begin();
+            }
+            if (i->x > (middle + best.dmin) && !foundRight) {
+                foundRight = true;
+                rightEdge = (i - 1);
+                right = (i - 1) - vp.begin();
+                break;
+            }
         }
     }
 
 	// Order points in strip area by Y coordinate
-	sort(leftEdge,rightEdge,sortPointY);
+	if (leftEdge != rightEdge && pointInStrip) sort(leftEdge,rightEdge+1,sortPointY);
 
 	// Calculate nearest points in strip area (using npByY function)
-	npByY(vp,left,right,best);
+	if (pointInStrip) npByY(vp,left,right,best);
 
 	// Reorder points in strip area back by X coordinate
-	//TODO
+    if (leftEdge != rightEdge && pointInStrip) sort(leftEdge,rightEdge+1,sortPointX);
 
-	//return res;
+	return best;
 }
 
 

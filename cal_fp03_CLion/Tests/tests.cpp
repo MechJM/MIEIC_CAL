@@ -200,12 +200,12 @@ void testNearestPoints(NP_FUNC func, string alg) {
     if ( testNPRandConstX(0x200000, "Pontos2MConstX",  1.0, func, alg) > maxTime)
         return;
 }
-
-
+/*
+//Passed but takes time
 TEST(CAL_FP03, testNP_BF) {
     testNearestPoints(nearestPoints_BF, "Brute force");
 }
-
+*/
 /*
 TEST(CAL_FP03, testNP_BF_SortedX) {
     testNearestPoints(nearestPoints_BF_SortByX, "Brute force, sorted by x");
