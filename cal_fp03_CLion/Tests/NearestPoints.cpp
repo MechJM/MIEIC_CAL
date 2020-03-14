@@ -79,7 +79,19 @@ Result nearestPoints_BF_SortByX(vector<Point> &vp) {
  */
 static void npByY(vector<Point> &vp, int left, int right, Result &res)
 {
-	// TODO
+	for (int i = left; i <= right; i++)
+    {
+	    for (int i2 = i + 1; i2 <= right; i2++)
+        {
+	        if ((vp.at(i2).y - vp.at(i).y) > res.dmin) break;
+	        else if (vp.at(i).distance(vp.at(i2)) < res.dmin)
+            {
+	            res.p1 = vp.at(i);
+	            res.p2 = vp.at(i2);
+	            res.dmin = vp.at(i).distance(vp.at(i2));
+            }
+        }
+    }
 }
 
 bool sortPointY(const Point &left,const Point &right)
