@@ -71,7 +71,8 @@ Result nearestPoints_BF_SortByX(vector<Point> &vp) {
     {
         for (auto i2 = (i+1);i2 != vp.end();i2++)
         {
-            if (i->distance(*i2) < res.dmin)
+            if (i2->x - i->x > res.dmin) break;
+            else if (i->distance(*i2) < res.dmin)
             {
                 res.dmin = i->distance(*i2);
                 res.p1 = (*i);
