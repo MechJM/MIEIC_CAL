@@ -66,7 +66,20 @@ Result nearestPoints_BF(vector<Point> &vp) {
 Result nearestPoints_BF_SortByX(vector<Point> &vp) {
 	Result res;
 	sortByX(vp, 0, vp.size()-1);
-	// TODO
+
+    for (auto i = vp.begin();i != vp.end();i++)
+    {
+        for (auto i2 = (i+1);i2 != vp.end();i2++)
+        {
+            if (i->distance(*i2) < res.dmin)
+            {
+                res.dmin = i->distance(*i2);
+                res.p1 = (*i);
+                res.p2 = (*i2);
+            }
+        }
+    }
+
 	return res;
 }
 
@@ -120,12 +133,13 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 	// Divide in halves (left and right) and solve them recursively,
 	// possibly in parallel (in case numThreads > 1)
 	Result leftRes,rightRes;
+    Result *leftResPtr = &leftRes;
 
 	if (numThreads > 1)
     {
-	    thread t([&vp,left,right,numThreads]{
-            vector<Point> vv(vp);
-            Result leftRes = np_DC(vv,left,(right+left)/2,numThreads);
+	    vector<Point> *vp_ptr = &vp;
+	    thread t([=](){
+            *leftResPtr = np_DC(*vp_ptr,left,(right+left)/2,numThreads);
 	    });
         rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
         t.join();
