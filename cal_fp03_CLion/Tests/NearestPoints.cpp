@@ -137,11 +137,12 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 
 	if (numThreads > 1)
     {
-	    vector<Point> *vp_ptr = &vp;
+	    //vector<Point> *vp_ptr = &vp;
 	    thread t([=](){
-            *leftResPtr = np_DC(*vp_ptr,left,(right+left)/2,numThreads);
+	        vector<Point> copy(vp);
+            *leftResPtr = np_DC(copy,left,(right+left)/2,numThreads/2);
 	    });
-        rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
+        rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads/2);
         t.join();
     }
 	else
