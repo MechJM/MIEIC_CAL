@@ -119,17 +119,21 @@ static Result np_DC(vector<Point> &vp, int left, int right, int numThreads) {
 
 	// Divide in halves (left and right) and solve them recursively,
 	// possibly in parallel (in case numThreads > 1)
+	Result leftRes,rightRes;
+
 	if (numThreads > 1)
     {
-	    std::thread t([=](){np_DC(vp,left,(right + left) / 2,numThreads);});
-        Result rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
+	    thread t([&vp,left,right,numThreads]{
+            vector<Point> vv(vp);
+            Result leftRes = np_DC(vv,left,(right+left)/2,numThreads);
+	    });
+        rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
         t.join();
-
     }
 	else
     {
-        Result leftRes = np_DC(vp, left, (right + left) / 2, numThreads);
-        Result rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
+        leftRes = np_DC(vp, left, (right + left) / 2, numThreads);
+        rightRes = np_DC(vp, (right + left) / 2 + 1, right, numThreads);
     }
 
 	// Select the best solution from left and right

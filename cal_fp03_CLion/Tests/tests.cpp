@@ -201,7 +201,6 @@ void testNearestPoints(NP_FUNC func, string alg) {
         return;
 }
 /*
-//Passed but takes time
 TEST(CAL_FP03, testNP_BF) {
     testNearestPoints(nearestPoints_BF, "Brute force");
 }
@@ -211,18 +210,18 @@ TEST(CAL_FP03, testNP_BF_SortedX) {
     testNearestPoints(nearestPoints_BF_SortByX, "Brute force, sorted by x");
 }
 */
-
+/*
 TEST(CAL_FP03, testNP_DC) {
     testNearestPoints(nearestPoints_DC, "Divide and conquer");
 }
+*/
 
-/*
 TEST(CAL_FP03, testNP_DC_2Threads) {
     setNumThreads(2);
     testNearestPoints(nearestPoints_DC_MT, "Divide and conquer with 2 threads");
 }
 
-
+/*
 TEST(CAL_FP03, testNP_DC_4Threads) {
     setNumThreads(4);
     testNearestPoints(nearestPoints_DC_MT, "Divide and conquer with 4 threads");
