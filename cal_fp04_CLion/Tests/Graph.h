@@ -296,8 +296,29 @@ vector<T> Graph<T>::bfs(const T & source) const {
 
 template<class T>
 vector<T> Graph<T>::topsort() const {
-	// TODO (26 lines)
 	vector<T> res;
+
+    queue<Vertex<T> *> processLine;
+	for (auto i : vertexSet)
+	{
+	    i->indegree = i->adj.size();
+	    if (i->indegree == 0) processLine.push(i);
+	}
+
+	while(!processLine.empty())
+    {
+	    auto currentVertex = processLine.front();
+	    processLine.pop();
+	    res.push_back(currentVertex->info);
+	    for (auto i : currentVertex->adj)
+        {
+	        i.dest->indegree--;
+	        if (i.dest->indegree == 0) processLine.push(i.dest);
+        }
+    }
+
+    if (res.size() != vertexSet.size()) res.clear();
+
 	return res;
 }
 
