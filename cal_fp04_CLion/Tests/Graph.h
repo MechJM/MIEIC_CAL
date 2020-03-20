@@ -298,12 +298,17 @@ template<class T>
 vector<T> Graph<T>::topsort() const {
 	vector<T> res;
 
-    queue<Vertex<T> *> processLine;
+
+    for (auto i : vertexSet) i->indegree = 0;
 	for (auto i : vertexSet)
 	{
-	    i->indegree = i->adj.size();
-	    if (i->indegree == 0) processLine.push(i);
+	    for (auto i2 : i->adj)
+        {
+	        i2.dest->indegree++;
+        }
 	}
+    queue<Vertex<T> *> processLine;
+	for (auto i : vertexSet) if (i->indegree == 0) processLine.push(i);
 
 	while(!processLine.empty())
     {
