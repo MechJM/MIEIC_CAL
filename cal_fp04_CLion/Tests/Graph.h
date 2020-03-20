@@ -251,8 +251,6 @@ void Graph<T>::dfsVisit(Vertex<T> *v, vector<T> & res) const {
  */
 template <class T>
 vector<T> Graph<T>::bfs(const T & source) const {
-	// HINT: Use the flag "visited" to mark newly discovered vertices .
-	// HINT: Use the "queue<>" class to temporarily store the vertices.
 	vector<T> res;
     Vertex<T> *start;
 	for (auto i : vertexSet)
@@ -339,8 +337,48 @@ vector<T> Graph<T>::topsort() const {
 
 template <class T>
 int Graph<T>::maxNewChildren(const T & source, T &inf) const {
-	// TODO (28 lines, mostly reused)
-	return 0;
+    int res = -99999;
+
+    //indegree is used as a counter of new children for each node
+
+    Vertex<T> *start;
+    for (auto i : vertexSet)
+    {
+        i->visited = false;
+        i->indegree = 0;
+        if (i->info == source) {start = i; i->visited = true;}
+    }
+
+    queue<Vertex<T>*> processLine;
+    processLine.push(start);
+
+    while(!processLine.empty())
+    {
+        Vertex<T> *currentVertex = processLine.front();
+        processLine.pop();
+
+        for (auto i : currentVertex->adj)
+        {
+            auto currentAdj = i.dest;
+            if (!currentAdj->visited)
+            {
+                currentVertex->indegree++;
+                processLine.push(currentAdj);
+                currentAdj->visited = true;
+            }
+        }
+    }
+
+    for (auto i : vertexSet)
+    {
+        if (i->indegree > res)
+        {
+            res = i->indegree;
+            inf = i->info;
+        }
+    }
+
+    return res;
 }
 
 /****************** 3b) isDAG   (HOME WORK)  ********************/
