@@ -28,6 +28,9 @@ class Vertex {
 public:
 	Vertex(T in);
 	friend class Graph<T>;
+	//My additions
+	bool operator==(const Vertex<T> &right);
+	T getInfo();
 };
 
 template <class T>
@@ -38,6 +41,8 @@ public:
 	Edge(Vertex<T> *d, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+	//My additions
+	Vertex<T>* getDest();
 };
 
 template <class T>
@@ -139,13 +144,9 @@ void Vertex<T>::addEdge(Vertex<T> *d, double w) {
  */
 template <class T>
 bool Graph<T>::removeEdge(const T &sourc, const T &dest) {
-	// TODO (5 lines)
-	// HINT: Use "findVertex" to obtain the actual vertices.
-	// HINT: Use the next function to actually remove the edge.
-	if (findVertex(sourc) != NULL)
-    {
-
-    }
+	Vertex<T> *source = findVertex(sourc);
+	Vertex<T> *destination = findVertex(dest);
+	if (source != NULL && destination != NULL && source->removeEdgeTo(destination)) return true;
 	return false;
 }
 
@@ -156,8 +157,14 @@ bool Graph<T>::removeEdge(const T &sourc, const T &dest) {
  */
 template <class T>
 bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
-	// TODO (6 lines)
-	// HINT: use an iterator to scan the "adj" vector and then erase the edge.
+	for (auto it = adj.begin();  it != adj.end(); it++)
+    {
+	    if ((*it->getDest()) == *d)
+        {
+	        adj.erase(it);
+	        return true;
+        }
+    }
 	return false;
 }
 
@@ -171,9 +178,25 @@ bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
  */
 template <class T>
 bool Graph<T>::removeVertex(const T &in) {
-	// TODO (10 lines)
-	// HINT: use an iterator to scan the "vertexSet" vector and then erase the vertex.
-	// HINT: take advantage of "removeEdgeTo" to remove incoming edges.
+	Vertex<T> copy(in);
+	bool found = false;
+
+	for (auto it = vertexSet.begin(); it != vertexSet.end(); it++)
+    {
+	    if ((*it)->getInfo() == in)
+        {
+	        it = vertexSet.erase(it);
+	        it--;
+	        found = true;
+        }
+	    else
+        {
+            (*it)->removeEdgeTo(&copy);
+        }
+    }
+
+	if (found) return true;
+
 	return false;
 }
 
@@ -275,6 +298,23 @@ template <class T>
 bool Graph<T>::dfsIsDAG(Vertex<T> *v) const {
 	// TODO (12 lines, mostly reused)
 	return true;
+}
+
+template<class T>
+bool Vertex<T>::operator==(const Vertex<T> &right)
+{
+    return info == right.info;
+}
+
+template<class T>
+Vertex<T>* Edge<T>::getDest()
+{
+    return dest;
+}
+template<class T>
+T Vertex<T>::getInfo()
+{
+    return info;
 }
 
 
