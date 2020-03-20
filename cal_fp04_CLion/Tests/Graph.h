@@ -31,6 +31,8 @@ public:
 	//My additions
 	bool operator==(const Vertex<T> &right);
 	T getInfo();
+	void setVisited(bool visited);
+	bool getVisited();
 };
 
 template <class T>
@@ -210,8 +212,18 @@ bool Graph<T>::removeVertex(const T &in) {
  */
 template <class T>
 vector<T> Graph<T>::dfs() const {
-	// TODO (7 lines)
 	vector<T> res;
+
+	for (auto i : vertexSet)
+    {
+        i->visited = false;
+    }
+
+	for (auto i : vertexSet)
+    {
+	    if (!i->visited) dfsVisit(i,res);
+    }
+
 	return res;
 }
 
@@ -221,7 +233,12 @@ vector<T> Graph<T>::dfs() const {
  */
 template <class T>
 void Graph<T>::dfsVisit(Vertex<T> *v, vector<T> & res) const {
-	// TODO (7 lines)
+	v->visited = true;
+	res.push_back(v->info);
+	for (auto i : v->adj)
+    {
+	    if (!i.dest->visited) dfsVisit(i.dest,res);
+    }
 }
 
 /****************** 2b) bfs ********************/
@@ -300,6 +317,8 @@ bool Graph<T>::dfsIsDAG(Vertex<T> *v) const {
 	return true;
 }
 
+//My additions
+
 template<class T>
 bool Vertex<T>::operator==(const Vertex<T> &right)
 {
@@ -315,6 +334,18 @@ template<class T>
 T Vertex<T>::getInfo()
 {
     return info;
+}
+
+template<class T>
+void Vertex<T>::setVisited(bool visited)
+{
+    this->visited = visited;
+}
+
+template<class T>
+bool Vertex<T>::getVisited()
+{
+    return visited;
 }
 
 
