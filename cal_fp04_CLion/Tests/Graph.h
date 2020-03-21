@@ -418,8 +418,10 @@ bool Graph<T>::dfsIsDAG(Vertex<T> *v) const {
     else v->processing = true;
     for (auto i : v->adj)
     {
-        if (!i.dest->visited) dfsIsDAG(i.dest);
+        if (!i.dest->visited) {if (!dfsIsDAG(i.dest)) return false;}
+        if (i.dest->processing) return false;
     }
+    v->processing = false;
     return true;
 }
 
