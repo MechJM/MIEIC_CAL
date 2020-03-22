@@ -28,11 +28,6 @@ class Vertex {
 public:
 	Vertex(T in);
 	friend class Graph<T>;
-	//My additions
-	bool operator==(const Vertex<T> &right);
-	T getInfo();
-	void setVisited(bool visited);
-	bool getVisited();
 };
 
 template <class T>
@@ -43,8 +38,6 @@ public:
 	Edge(Vertex<T> *d, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
-	//My additions
-	Vertex<T>* getDest();
 };
 
 template <class T>
@@ -161,7 +154,7 @@ template <class T>
 bool Vertex<T>::removeEdgeTo(Vertex<T> *d) {
 	for (auto it = adj.begin();  it != adj.end(); it++)
     {
-	    if ((*it->getDest()) == *d)
+	    if ((*it->dest).info == d->info)
         {
 	        adj.erase(it);
 	        return true;
@@ -185,7 +178,7 @@ bool Graph<T>::removeVertex(const T &in) {
 
 	for (auto it = vertexSet.begin(); it != vertexSet.end(); it++)
     {
-	    if ((*it)->getInfo() == in)
+	    if ((*it)->info == in)
         {
 	        it = vertexSet.erase(it);
 	        it--;
@@ -423,37 +416,6 @@ bool Graph<T>::dfsIsDAG(Vertex<T> *v) const {
     }
     v->processing = false;
     return true;
-}
-
-//My additions
-
-template<class T>
-bool Vertex<T>::operator==(const Vertex<T> &right)
-{
-    return info == right.info;
-}
-
-template<class T>
-Vertex<T>* Edge<T>::getDest()
-{
-    return dest;
-}
-template<class T>
-T Vertex<T>::getInfo()
-{
-    return info;
-}
-
-template<class T>
-void Vertex<T>::setVisited(bool visited)
-{
-    this->visited = visited;
-}
-
-template<class T>
-bool Vertex<T>::getVisited()
-{
-    return visited;
 }
 
 
