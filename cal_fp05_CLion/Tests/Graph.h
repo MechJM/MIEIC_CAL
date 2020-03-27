@@ -183,6 +183,7 @@ void Graph<T>::unweightedShortestPath(const T &orig) {
     }
 
 	queue<Vertex<T>*> processing;
+	//start->queueIndex = 0;
 	processing.push(start);
 
 	while (!processing.empty())
@@ -204,7 +205,32 @@ void Graph<T>::unweightedShortestPath(const T &orig) {
 
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
-	// TODO
+    Vertex<T>* start;
+    for (auto i : vertexSet)
+    {
+        if (i->info != origin) i->dist  = 99999;
+        else {i->dist = 0; start = i;}
+        i->path = NULL;
+        i->queueIndex = 0;
+    }
+
+    MutablePriorityQueue<Vertex<T>> processing;
+    processing.insert(start);
+    while (!processing.empty())
+    {
+        auto current = processing.extractMin();
+        for (auto i: current->adj)
+        {
+            if (i.dest->dist > (current->dist + i.weight))
+            {
+                i.dest->dist = (current->dist + i.weight);
+                i.dest->path = current;
+                if (i.dest->queueIndex == 0) processing.insert(i.dest);
+                else processing.decreaseKey(i.dest);
+            }
+        }
+    }
+
 }
 
 
