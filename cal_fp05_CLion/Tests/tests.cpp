@@ -6,6 +6,7 @@
 #include <time.h>
 #include <chrono>
 #include "Graph.h"
+#include <fstream>
 
 using namespace std;
 using testing::Eq;
@@ -122,8 +123,11 @@ TEST(CAL_FP05, test_dijkstra) {
 
 
 
- /* //Uncomment the test below...
+  //Uncomment the test below...
 TEST(CAL_FP05, test_performance_dijkstra) {
+    //My additions
+    ofstream csv; csv.open("../dijkstra.csv");
+    //End of my additions
     for (int n = 10; n <= 100; n += 10) {
         Graph< pair<int,int> > g;
         cout << "Dijkstra generating grid " << n << " x " << n << " ..." << endl;
@@ -135,10 +139,16 @@ TEST(CAL_FP05, test_performance_dijkstra) {
                 g.dijkstraShortestPath(make_pair(i,j));
         auto finish = std::chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+        //My additions
+        csv<<n<<","<<elapsed<<"\n";
+        //End of my additions
         cout << "Dijkstra processing grid " << n << " x " << n << " average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
     }
+    //My additions
+    csv.close();
+    //End of my additions
 }
-*/
+
 
 
 /* //Uncomment the test below...
