@@ -173,7 +173,32 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 
 template<class T>
 void Graph<T>::unweightedShortestPath(const T &orig) {
-	// TODO
+    Vertex<T>* start;
+
+	for (auto i : vertexSet)
+    {
+	    if (i->info != orig) i->dist  = 99999;
+	    else {i->dist = 0; start = i;}
+	    i->path = NULL;
+    }
+
+	queue<Vertex<T>*> processing;
+	processing.push(start);
+
+	while (!processing.empty())
+    {
+	    Vertex<T>* current = processing.front();
+	    processing.pop();
+	    for (auto i: current->adj)
+        {
+	        if (i.dest->dist == 99999)
+            {
+	            processing.push(i.dest);
+	            i.dest->dist = current->dist + 1;
+	            i.dest->path = current;
+            }
+        }
+    }
 }
 
 
@@ -192,7 +217,24 @@ void Graph<T>::bellmanFordShortestPath(const T &orig) {
 template<class T>
 vector<T> Graph<T>::getPathTo(const T &dest) const{
 	vector<T> res;
-	// TODO
+
+	for (auto i: vertexSet)
+    {
+	    if (i->info == dest)
+        {
+	        res.push_back(i->info);
+	        while (i->path != NULL)
+            {
+                i = i->path;
+	            res.push_back(i->info);
+            }
+            break;
+        }
+
+    }
+
+	reverse(res.begin(),res.end());
+
 	return res;
 }
 
