@@ -46,22 +46,24 @@ basic_ostream<char>& operator<<(basic_ostream<char> & strm, const pair<T1, T2>& 
     return strm;
 }
 
-
-void geneateRandomGridGraph(int n, Graph<pair<int,int>> & g) {
+//Changed parameters to get V and E
+void geneateRandomGridGraph(int n, Graph<pair<int,int>> & g, long int &V, long int &E) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(1, n);
 
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            g.addVertex(make_pair(i,j));
+            {g.addVertex(make_pair(i,j));
+            V++;}//My addition
 
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int di = -1; di <= 1; di++)
                 for (int dj = -1; dj <= 1; dj++)
                     if ((di != 0) != (dj != 0) && i+di >= 0 && i+di < n && j+dj >= 0 && j+dj < n)
-                        g.addEdge(make_pair(i,j), make_pair(i+di,j+dj), dis(gen));
+                        {g.addEdge(make_pair(i,j), make_pair(i+di,j+dj), dis(gen));
+                        E++;}//My addition
 }
 
 template <class T>
@@ -127,11 +129,12 @@ TEST(CAL_FP05, test_dijkstra) {
 TEST(CAL_FP05, test_performance_dijkstra) {
     //My additions
     ofstream csv; csv.open("../dijkstra.csv");
+    long int V=0,E=0;
     //End of my additions
     for (int n = 10; n <= 100; n += 10) {
         Graph< pair<int,int> > g;
         cout << "Dijkstra generating grid " << n << " x " << n << " ..." << endl;
-        geneateRandomGridGraph(n, g);
+        geneateRandomGridGraph(n, g,V,E);
         cout << "Dijkstra processing grid " << n << " x " << n << " ..." << endl;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < n; i++)
@@ -140,7 +143,9 @@ TEST(CAL_FP05, test_performance_dijkstra) {
         auto finish = std::chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
         //My additions
-        csv<<n<<","<<elapsed/(n*n)<<"\n";
+        csv<<n<<","<<V<<","<<E<<","<<elapsed/(n*n)<<"\n";
+        V=0;
+        E=0;
         //End of my additions
         cout << "Dijkstra processing grid " << n << " x " << n << " average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
     }
