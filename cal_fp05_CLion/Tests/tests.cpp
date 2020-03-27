@@ -140,7 +140,7 @@ TEST(CAL_FP05, test_performance_dijkstra) {
         auto finish = std::chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::microseconds>(finish - start).count();
         //My additions
-        csv<<n<<","<<elapsed<<"\n";
+        csv<<n<<","<<elapsed/(n*n)<<"\n";
         //End of my additions
         cout << "Dijkstra processing grid " << n << " x " << n << " average time (micro-seconds)=" << (elapsed / (n*n)) << endl;
     }
