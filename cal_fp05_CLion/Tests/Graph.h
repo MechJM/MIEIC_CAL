@@ -236,7 +236,35 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 
 template<class T>
 void Graph<T>::bellmanFordShortestPath(const T &orig) {
-	// TODO
+	for (auto i : vertexSet)
+    {
+	    if (i->info == orig) i->dist = 0;
+	    else i->dist = 99999;
+	    i->path = NULL;
+    }
+
+	for (int i3 = 1; i3 < vertexSet.size(); i3++)
+	{
+	    for (auto i: vertexSet)
+        {
+            for (auto i2 : i->adj)
+            {
+                if (i2.dest->dist > (i->dist + i2.weight))
+                {
+                    i2.dest->dist = i->dist + i2.weight;
+                    i2.dest->path = i;
+                }
+            }
+        }
+	}
+
+	for (auto i : vertexSet)
+    {
+	    for (auto i2 : i->adj)
+        {
+	        if ((i->dist + i2.weight) < i2.dest->dist) break;
+        }
+    }
 }
 
 
