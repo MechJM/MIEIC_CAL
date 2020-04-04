@@ -117,10 +117,10 @@ public:
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();   //TODO...
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
-	//Matrixes required for Floyd-Warshall
+	//Stuff required for Floyd-Warshall
     int D[10][10];
-    int W[10][10];
     Vertex<T>* P[10][10];
+    int getVertexIndex(Vertex<T>* vert);
 };
 
 template <class T>
@@ -298,75 +298,25 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{
 
 
 /**************** All Pairs Shortest Path  ***************/
-
 template <class T>
-void copyMatrix(T m1[10][10], T m2[10][10])
+int Graph<T>::getVertexIndex(Vertex<T>* vert)
 {
-   for (int i = 0; i < 10; i++)
-   {
-       for (int i2 = 0;i2 < 10; i2++)
-       {
-           m1[i][i2] = m2[i][i2];
-       }
-   }
-}
-
-template <class T>
-void initW(vector<Vertex<T>*> &vect,int W[10][10])
-{
-    for (int i = 0; i < 10; i++)
-    {
-        for (int i2 = 0; i2 < 10; i2++)
-        {
-            if (i == i2) W[i][i2] = 0;
-            else W[i][i2] = 99999;
-        }
-    }
-
-    for (auto i : vect)
-    {
-        for (auto i2 : i->adj)
-        {
-            W[i->info-1,i2.dest->info-1] = i2.weight;
-        }
+    for (int i = 0; i < vertexSet.size(); ++i) {
+        if (vertexSet[i] == vert) return i;
     }
 }
 
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
-    initW(vertexSet,W);
-    int D_prev[10][10];
-    int W_prev[10][10];
-    Vertex<T>* P_prev[10][10];
-    for (int i = 0; i <= vertexSet.size(); i++)
-    {
-        if (i == 0)
+    for (int vertex = 0; vertex < vertexSet.size(); ++vertex) {
+        for (auto adjEdge : vertexSet[vertex]->adj)
         {
-            copyMatrix(D,W);
-            for (int i2 = 0; i2 < 10; i2++)
-            {
-                P[0][i2] = NULL;
-            }
-        }
-        else
-        {
-           copyMatrix(D_prev,D);
-           copyMatrix(W_prev,W);
-           copyMatrix(P_prev,P);
-
-           for (int i2 = 0; i2 < 10; i2++)
-           {
-               for (int i3 = 0; i3 < 10; i3++)
-               {
-                   D[i2][i3] = min(D_prev[i2][i3],D_prev[i2][i] + D_prev[i][i3]);
-                   if (D[i2][i3] == D_prev[i2][i] + D_prev[i][i3])
-                   {
-
-                   }
-               }
-           }
+            auto currentAdjVertex = adjEdge.dest;
+            int vertex2 = getVertexIndex(currentAdjVertex);
+            D[vertex][vertex2] = adjEdge.weight;
         }
     }
+
 }
 
 template<class T>
