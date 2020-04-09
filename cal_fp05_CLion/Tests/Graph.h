@@ -117,10 +117,13 @@ public:
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();   //TODO...
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;   //TODO...
+
+	/**************************/
 	//Stuff required for Floyd-Warshall
     int D[10][10];
     Vertex<T>* P[10][10];
     int getVertexIndex(Vertex<T>* vert);
+    /*************************/
 };
 
 template <class T>
@@ -308,12 +311,34 @@ int Graph<T>::getVertexIndex(Vertex<T>* vert)
 
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
+    for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            D[i][j] = 99999;
+        }
+    }
+
     for (int vertex = 0; vertex < vertexSet.size(); ++vertex) {
         for (auto adjEdge : vertexSet[vertex]->adj)
         {
             auto currentAdjVertex = adjEdge.dest;
             int vertex2 = getVertexIndex(currentAdjVertex);
-            D[vertex][vertex2] = adjEdge.weight;
+            if (vertex != vertex2) D[vertex][vertex2] = adjEdge.weight;
+            else D[vertex][vertex2] = 0;
+        }
+    }
+
+    for (int k = 1; k <= vertexSet.size(); ++k)
+    {
+        for (int i = 1; i <= vertexSet.size() ; ++i)
+        {
+            for (int j = 1; j <= vertexSet.size(); ++j)
+            {
+                if (D[i][j] > (D[i][k] + D[k][j]))
+                {
+                    D[i][j] = (D[i][k] + D[k][j]);
+                    P[i][j] =
+                }
+            }
         }
     }
 
