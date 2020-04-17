@@ -366,7 +366,24 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
 /**************** Minimum Spanning Tree  ***************/
 template <class T>
 bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
-    // TODO
+    Vertex<T>* edgeOrigin,edgeDest;
+
+    for (auto i : vertexSet)
+    {
+        if (i->info == sourc)
+        {
+            edgeOrigin = i;
+            for (auto i2 : vertexSet)
+            {
+                if (i2->info == dest) edgeDest;
+                i->adj.push_back(Edge<T>(edgeOrigin,edgeDest,w));
+                return true;
+            }
+        }
+    }
+
+
+
     return false;
 }
 
