@@ -375,7 +375,7 @@ bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
             edgeOrigin = i;
             for (auto i2 : vertexSet)
             {
-                if (i2->info == dest) edgeDest;
+                if (i2->info == dest) edgeDest = i2;
                 i->adj.push_back(Edge<T>(edgeOrigin,edgeDest,w));
                 return true;
             }
