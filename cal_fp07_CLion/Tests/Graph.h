@@ -140,6 +140,9 @@ public:
     bool addBidirectionalEdge(const T &sourc, const T &dest, double w);
 	vector<Vertex<T>*> calculatePrim();
 	vector<Vertex<T>*> calculateKruskal();
+
+	//Auxiliary functions
+	bool findInverseEdge(const Edge<T> &edge);
 };
 
 
@@ -366,7 +369,8 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
 /**************** Minimum Spanning Tree  ***************/
 template <class T>
 bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
-    Vertex<T>* edgeOrigin,edgeDest;
+    Vertex<T>* edgeOrigin;
+    Vertex<T>* edgeDest;
 
     for (auto i : vertexSet)
     {
@@ -375,9 +379,14 @@ bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
             edgeOrigin = i;
             for (auto i2 : vertexSet)
             {
-                if (i2->info == dest) edgeDest = i2;
-                i->adj.push_back(Edge<T>(edgeOrigin,edgeDest,w));
-                return true;
+                if (i2->info == dest)
+                {
+                    edgeDest = i2;
+                    i->adj.push_back(Edge<T>(edgeOrigin,edgeDest,w));
+                    i2->adj.push_back(Edge<T>(edgeDest,edgeOrigin,w));
+                    return true;
+                }
+
             }
         }
     }
@@ -391,15 +400,63 @@ bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
 
 template <class T>
 vector<Vertex<T>* > Graph<T>::calculatePrim() {
-	// TODO
+    for (auto i : vertexSet)
+    {
+        i->dist  = 99999;
+        i->path = NULL;
+        i->queueIndex = 0;
+        i->visited = false;
+    }
+
+    MutablePriorityQueue<Vertex<T>> processing;
+    processing.insert(vertexSet.at(0));
+    while (!processing.empty())
+    {
+        auto current = processing.extractMin();
+        for (auto i: current->adj)
+        {
+            if (i.dest->dist > (i.weight))
+            {
+                i.dest->dist = (i.weight);
+                i.dest->path = current;
+                if (i.dest->queueIndex == 0) processing.insert(i.dest);
+                else processing.decreaseKey(i.dest);
+            }
+
+        }
+    }
+
+    vertexSet.at(0)->path = nullptr;
+
 	return vertexSet;
 }
 
-
+template <class T>
+bool Graph<T>::findInverseEdge(const Edge<T> &edge)
+{
+    if (edge.orig->path == edge.dest) return true;
+    else return false;
+}
 
 template <class T>
 vector<Vertex<T>*> Graph<T>::calculateKruskal() {
-	// TODO
+	vector<Edge<T>> edges;
+
+	for (auto i : vertexSet)
+    {
+	    for (auto i2 : i->adj)
+        {
+	        edges.push_back(i2);
+        }
+    }
+
+	sort(edges.begin(),edges.end(),[](const Edge<T> &a, const Edge<T> &b) {return a.getWeight() < b.getWeight();});
+
+	for (auto i : edges)
+    {
+	    if (!findInverseEdge(i)) i.dest->path = i.orig;
+    }
+
 	return vertexSet;
 }
 

@@ -53,7 +53,7 @@ TEST(CAL_FP07, testPrim) {
 }
 
 
-/*
+
 TEST(CAL_FP07, testKruskal) {
 	Graph<int> graph = createTestGraph();
 	vector<Vertex<int>* > res = graph.calculateKruskal();
@@ -72,5 +72,5 @@ TEST(CAL_FP07, testKruskal) {
 	// Nota: a melhorar esta verficacao (o que interessa sao as arestas serem selecionadas)
 
 }
-*/
+
 
