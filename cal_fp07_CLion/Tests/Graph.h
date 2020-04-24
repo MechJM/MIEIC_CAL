@@ -400,27 +400,35 @@ bool Graph<T>::addBidirectionalEdge(const T &sourc, const T &dest, double w) {
 
 template <class T>
 vector<Vertex<T>* > Graph<T>::calculatePrim() {
+    MutablePriorityQueue<Vertex<T>> processing;
     for (auto i : vertexSet)
     {
         i->dist  = 99999;
         i->path = NULL;
         i->queueIndex = 0;
         i->visited = false;
+        processing.insert(i);
     }
 
-    MutablePriorityQueue<Vertex<T>> processing;
-    processing.insert(vertexSet.at(0));
+
+
     while (!processing.empty())
     {
         auto current = processing.extractMin();
         for (auto i: current->adj)
         {
-            if (i.dest->dist > (i.weight))
+            if (i.dest->dist > i.weight)
             {
-                i.dest->dist = (i.weight);
+                i.dest->dist = i.weight;
                 i.dest->path = current;
+               // processing.decreaseKey(i.dest);
                 if (i.dest->queueIndex == 0) processing.insert(i.dest);
                 else processing.decreaseKey(i.dest);
+                /*
+                i.dest->dist = (i.weight);
+                i.dest->path = current;
+                i.dest->visited = true;
+               */
             }
 
         }
@@ -434,8 +442,7 @@ vector<Vertex<T>* > Graph<T>::calculatePrim() {
 template <class T>
 bool Graph<T>::findInverseEdge(const Edge<T> &edge)
 {
-    if (edge.orig->path == edge.dest) return true;
-    else return false;
+    return edge.orig->path == edge.dest;
 }
 
 template <class T>
