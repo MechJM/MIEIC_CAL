@@ -113,6 +113,7 @@ public:
     bool findAugmentationPath(T source, T target);
     void testAndVisit(queue<Vertex<T>*> &Q, Edge<T>* edge, Vertex<T>* dest, double residual);
     double findMinResidualPath(T source, T target);
+    void augmentFlowPath(T source, T target, double flow);
 };
 
 template <class T>
@@ -172,7 +173,7 @@ void Graph<T>::fordFulkerson(T source, T target) {
     while (findAugmentationPath(source,target))
     {
         flow = findMinResidualPath(source,target);
-        //augmentFlowPath
+        augmentFlowPath(source,target,flow);
     }
 }
 
@@ -230,7 +231,7 @@ double Graph<T>::findMinResidualPath(T source, T target)
         if (vert->info == target) end = vert;
     }
 
-    Vertex<T>* currentVert = start;
+    Vertex<T>* currentVert = end;
     while (currentVert != start)
     {
         Edge<T>* currentEdge = currentVert->path;
@@ -246,6 +247,32 @@ double Graph<T>::findMinResidualPath(T source, T target)
         }
     }
     return flow;
+}
+
+template <class T>
+void Graph<T>::augmentFlowPath(T source, T target, double flow)
+{
+    Vertex<T> *start,*end;
+    for (auto vert : vertexSet)
+    {
+        if (vert->info == source) start = vert;
+        if (vert->info == target) end = vert;
+    }
+    Vertex<T>* currentVert = end;
+    while (currentVert != start)
+    {
+        Edge<T>* currentEdge = currentVert->path;
+        if (currentEdge->dest == currentVert)
+        {
+            currentEdge->flow += flow;
+            currentVert = currentEdge->orig;
+        }
+        else
+        {
+            currentEdge->flow -= flow;
+            currentVert = currentEdge->dest;
+        }
+    }
 }
 
 
