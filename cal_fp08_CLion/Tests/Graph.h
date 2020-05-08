@@ -109,7 +109,9 @@ public:
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
 	void fordFulkerson(T source, T target);
-
+    ///Auxiliary functions
+    bool findAugmentationPath(T source, T target);
+    void testAndVisit(queue<Vertex<T>*> &Q, Edge<T>* edge, Vertex<T>* dest, double residual);
 };
 
 template <class T>
@@ -156,8 +158,66 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
  */
 template <class T>
 void Graph<T>::fordFulkerson(T source, T target) {
-    // TODO
+    for (auto vert : vertexSet)
+    {
+        for (auto edge : vert->outgoing)
+        {
+            edge->flow = 0;
+        }
+    }
+
+    while (findAugmentationPath(source,target))
+    {
+
+    }
+
+
 }
+
+template <class T>
+bool Graph<T>::findAugmentationPath(T source, T target)
+{
+    Vertex<T> *start,*end;
+    for (auto vert : vertexSet)
+    {
+        if (vert->info == source) start = vert;
+        if (vert->info == target) end = vert;
+        vert->visited = false;
+    }
+    start->visited = true;
+
+    queue<Vertex<T>*> processingLine;
+    processingLine.push(start);
+
+    while (!processingLine.empty() && !(end->visited))
+    {
+        Vertex<T>* currentVert = processingLine.front();
+        processingLine.pop();
+
+        for (auto outEdge : currentVert->outgoing)
+        {
+            testAndVisit(processingLine,outEdge,outEdge->dest,outEdge->capacity - outEdge->flow);
+        }
+        for (auto inEdge : currentVert->incoming)
+        {
+            testAndVisit(processingLine,inEdge,inEdge->orig,inEdge->flow);
+        }
+    }
+    return end->visited;
+}
+
+template <class T>
+void Graph<T>::testAndVisit(queue<Vertex<T>*> &Q, Edge<T>* edge, Vertex<T>* dest, double residual)
+{
+    if (!dest->visited && residual > 0)
+    {
+        dest->visited = true;
+        dest->path = edge;
+        Q.push(dest);
+    }
+}
+
+
 
 
 #endif /* GRAPH_H_ */
