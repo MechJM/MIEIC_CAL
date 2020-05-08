@@ -112,6 +112,7 @@ public:
     ///Auxiliary functions
     bool findAugmentationPath(T source, T target);
     void testAndVisit(queue<Vertex<T>*> &Q, Edge<T>* edge, Vertex<T>* dest, double residual);
+    double findMinResidualPath(T source, T target);
 };
 
 template <class T>
@@ -158,6 +159,7 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
  */
 template <class T>
 void Graph<T>::fordFulkerson(T source, T target) {
+    //resetFlows
     for (auto vert : vertexSet)
     {
         for (auto edge : vert->outgoing)
@@ -166,12 +168,12 @@ void Graph<T>::fordFulkerson(T source, T target) {
         }
     }
 
+    double flow;
     while (findAugmentationPath(source,target))
     {
-
+        flow = findMinResidualPath(source,target);
+        //augmentFlowPath
     }
-
-
 }
 
 template <class T>
@@ -217,6 +219,34 @@ void Graph<T>::testAndVisit(queue<Vertex<T>*> &Q, Edge<T>* edge, Vertex<T>* dest
     }
 }
 
+template <class T>
+double Graph<T>::findMinResidualPath(T source, T target)
+{
+    double flow = 9999999;
+    Vertex<T>* start,*end;
+    for (auto vert : vertexSet)
+    {
+        if (vert->info == source) start = vert;
+        if (vert->info == target) end = vert;
+    }
+
+    Vertex<T>* currentVert = start;
+    while (currentVert != start)
+    {
+        Edge<T>* currentEdge = currentVert->path;
+        if (currentEdge->dest == currentVert)
+        {
+            flow = min(flow,currentEdge->capacity - currentEdge->flow);
+            currentVert = currentEdge->orig;
+        }
+        else
+        {
+            flow = min(flow,currentEdge->flow);
+            currentVert = currentEdge->dest;
+        }
+    }
+    return flow;
+}
 
 
 
